@@ -3,11 +3,16 @@ import {
     BIG_FONT_SIZE,
     BLUE_COLOR,
     DARK_GREY2_COLOR,
-    DARK_GREY_COLOR, GREEN,
+    DARK_GREY_COLOR,
+    GREEN,
     LIGHT_GRAY,
-    LIGHT_GRAYISH_BLUE_COLOR, LIGHT_GREY_COLOR,
+    LIGHT_GRAYISH_BLUE_COLOR,
     NORMAL_FONT_SIZE,
-    ORANGE_COLOR, RED, RED_DELETE, SETTINGS_BACKGROUND_GREY, THRD_BUTTON,
+    ORANGE_COLOR,
+    RED,
+    RED_DELETE,
+    SETTINGS_BACKGROUND_GREY,
+    THRD_BUTTON,
     VERY_DARK_GREY_COLOR,
     WHITE_COLOR
 } from "../../constants/styleConstants";
@@ -412,3 +417,81 @@ export const Circle = styled.div<any>`
     background-color: ${RED};
   `}
 `
+
+export const RestaurantsListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`
+
+export const RestaurantSection = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  flex-direction: column;
+  padding-bottom: 2em;
+  box-shadow: 0 15px 30px 0 rgba(0, 0, 0, 0.2);
+  height: 380px;
+  margin-bottom: 15px;
+`
+
+export const ImageRestaurant = styled.div<any>`
+  width: 100%;
+  height: 200px;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  ${({linkImage}) => linkImage && `
+  background-image: url(${linkImage});
+  `}
+`
+
+export const DescriptionRestaurantContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: flex-start;
+  padding: 5px 5px 0.4em 10px
+`
+export const TitleRestaurant = styled.h2`
+  font-weight: bold;
+  padding: 0;
+  margin-top: 8px;
+  font-family: inherit;
+`
+
+export const LocationRestaurant = styled.p`
+  line-height: 1.42;
+  margin-top: 5px;
+  font-size: 15px;
+
+  & i {
+    font-size: 15px;
+    padding-right: 6px;
+
+  }
+`
+export const SpecificAndTypeSectionContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  font-size: 14px;
+  align-items: center;
+
+  & i {
+    font-size: 15px;
+    padding-right: 8px;
+  }
+`
+
+export const SpecificElement = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 12px;
+  margin-right: 6px;
+  margin-top: 6px;
+  border-radius: 5px;
+  background-color: rgba(48, 69, 76, 0.14);`
