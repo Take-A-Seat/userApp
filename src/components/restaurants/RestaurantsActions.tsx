@@ -144,7 +144,9 @@ export const getRestaurantById = ({dispatch, restaurantId}: { dispatch: Dispatch
         }
         return response.json()
     }).then(data => {
-        dispatch({type: GET_RESTAURANT_BY_ID_SUCCESS, payload: data})
+        if(data){
+            dispatch({type: GET_RESTAURANT_BY_ID_SUCCESS, payload: data})
+        }
     }).catch(error => {
         console.log("error", error)
     })

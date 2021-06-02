@@ -1,20 +1,22 @@
 import styled from "styled-components"
 import {
-    BIG_FONT_SIZE,
-    BLUE_COLOR,
-    DARK_GREY2_COLOR,
-    DARK_GREY_COLOR,
-    GREEN,
-    LIGHT_GRAY,
-    LIGHT_GRAYISH_BLUE_COLOR,
-    NORMAL_FONT_SIZE,
-    ORANGE_COLOR,
-    RED,
-    RED_DELETE,
-    SETTINGS_BACKGROUND_GREY,
-    THRD_BUTTON,
-    VERY_DARK_GREY_COLOR,
-    WHITE_COLOR
+  BIG_FONT_SIZE,
+  BLUE_COLOR,
+  DARK_GREY2_COLOR,
+  DARK_GREY_COLOR,
+  GREEN,
+  GREY_TEXT_COLOR,
+  LIGHT_GRAY,
+  LIGHT_GRAYISH_BLUE_COLOR,
+  NORMAL_FONT_SIZE,
+  ORANGE_COLOR,
+  RED,
+  RED_COLOR_BUTTON,
+  RED_DELETE,
+  SETTINGS_BACKGROUND_GREY,
+  THRD_BUTTON,
+  VERY_DARK_GREY_COLOR,
+  WHITE_COLOR
 } from "../../constants/styleConstants";
 
 export const VerticalDelimitator = styled.div`
@@ -225,6 +227,16 @@ export const Button = styled.div<any>`
         margin-right:0px;
         }
     `}
+  ${({redButton}) => redButton && `
+        background-color:${RED_COLOR_BUTTON};
+          border: 1px solid ${RED_COLOR_BUTTON};
+    `}
+  ${({customWidth}) => customWidth && `
+        width:${customWidth};
+    `}
+  ${({centerText}) => centerText && `
+        justify-content:center;
+    `}
 `;
 
 export const ActionButton = styled(Button)`
@@ -433,8 +445,24 @@ export const RestaurantSection = styled.div`
   flex-direction: column;
   padding-bottom: 2em;
   box-shadow: 0 15px 30px 0 rgba(0, 0, 0, 0.2);
-  height: 380px;
+  height: auto;
   margin-bottom: 15px;
+  @media only screen and (min-width: 600px) {
+    flex-direction: row;
+    padding: 1em 1em;
+    margin-bottom: 20px;
+
+  }
+  @media only screen and (min-width: 1000px) {
+    width: 80%;
+  }
+  @media only screen and (min-width: 1300px) {
+    width: 70%;
+  }
+
+  @media only screen and (min-width: 1600px) {
+    width: 50%;
+  }
 `
 
 export const ImageRestaurant = styled.div<any>`
@@ -457,36 +485,47 @@ export const DescriptionRestaurantContainer = styled.div`
 `
 export const TitleRestaurant = styled.h2`
   font-weight: bold;
+  color: ${GREY_TEXT_COLOR};
   padding: 0;
   margin-top: 8px;
   font-family: inherit;
 `
 
-export const LocationRestaurant = styled.p`
+export const LocationRestaurant = styled.p<any>`
   line-height: 1.42;
   margin-top: 5px;
   font-size: 15px;
-
+  color: ${GREY_TEXT_COLOR};
   & i {
     font-size: 15px;
     padding-right: 6px;
-
   }
+
+  ${({paddingTop}) => paddingTop && `
+  padding-top:10px;
+  margin-top:0;
+  `}
 `
-export const SpecificAndTypeSectionContainer = styled.div`
+export const SpecificAndTypeSectionContainer = styled.div<any>`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
   font-size: 14px;
   align-items: center;
+  justify-content: flex-start;
 
   & i {
     font-size: 15px;
     padding-right: 8px;
+    padding-top: 8px;
   }
+
+  ${({withPaddingTop}) => withPaddingTop && `
+    padding-top: 20px;
+  `}
 `
 
-export const SpecificElement = styled.div`
+export const SpecificElement = styled.div<any>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -494,4 +533,10 @@ export const SpecificElement = styled.div`
   margin-right: 6px;
   margin-top: 6px;
   border-radius: 5px;
-  background-color: rgba(48, 69, 76, 0.14);`
+  background-color: rgba(48, 69, 76, 0.14);
+  ${({noBackgroundAndMargin}) => noBackgroundAndMargin && `
+  background:transparent;
+  margin-top:0;
+  margin-right:0;
+  `}
+`

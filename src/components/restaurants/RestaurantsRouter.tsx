@@ -1,15 +1,18 @@
-import React, {Suspense} from 'react'
+import React, {lazy, Suspense} from 'react'
 import {Route, Switch, withRouter} from "react-router-dom";
-import RestaurantsList from "./list/RestaurantsList";
+import {LoaderComponent} from "../globals/Loader/Loader";
+
+const RestaurantsList = lazy(() => import("./list/RestaurantsList"))
+const ViewRestaurant = lazy(() => import("./view/ViewRestaurant"))
 
 const RestaurantsRouter = () => {
     return (
-        <Suspense fallback={<div/>}>
+        <Suspense fallback={<LoaderComponent/>}>
             <Switch>
                 <Route component={RestaurantsList} path={"/"} exact/>
-
+                <Route component={ViewRestaurant} path={"/restaurant/:restaurantId"} exact={false}/>
             </Switch>
         </Suspense>
     )
 }
-export default withRouter(RestaurantsRouter)
+export default withRouter(RestaurantsRouter);

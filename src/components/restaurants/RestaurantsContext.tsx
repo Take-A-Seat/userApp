@@ -17,13 +17,22 @@ import {
     GET_ALL_TYPES_RESTAURANT_SUCCESS,
     GET_MENU_BY_RESTAURANT_ID,
     GET_MENU_BY_RESTAURANT_ID_FAIL,
-    GET_MENU_BY_RESTAURANT_ID_SUCCESS, GET_RESTAURANTS, GET_RESTAURANTS_FAIL, GET_RESTAURANTS_SUCCESS
+    GET_MENU_BY_RESTAURANT_ID_SUCCESS,
+    GET_RESTAURANT_BY_ID, GET_RESTAURANT_BY_ID_FAIL, GET_RESTAURANT_BY_ID_SUCCESS,
+    GET_RESTAURANTS,
+    GET_RESTAURANTS_FAIL,
+    GET_RESTAURANTS_SUCCESS
 } from "./RestaurantsActions";
 
 type State = {
     loading: boolean,
     error: any,
     restaurants: any[],
+    selectedRestaurant: {
+        restaurantDetails: any;
+        listSpecifics: any[];
+        listTypes: any[];
+    },
     menu: any,
     listSpecifics: { id: string, name: string }[],
     listTypes: { id: string, name: string }[],
@@ -40,6 +49,11 @@ const initialState: State = {
     loading: false,
     error: {},
     menu: {},
+    selectedRestaurant: {
+        restaurantDetails: {},
+        listSpecifics: [],
+        listTypes: []
+    },
     listSpecifics: [],
     listTypes: [],
     fetchListSpecifics: [],
@@ -52,6 +66,28 @@ const restaurantReducer = (state: State, action: Action) => {
     const {addToast} = useToasts();
 
     switch (action.type) {
+        case GET_RESTAURANT_BY_ID: {
+            return {
+                ...state,
+                selectedRestaurant: {},
+                loading: true
+            }
+        }
+        case GET_RESTAURANT_BY_ID_SUCCESS: {
+            return {
+                ...state,
+                selectedRestaurant: action.payload,
+                loading: false,
+            }
+        }
+        case GET_RESTAURANT_BY_ID_FAIL: {
+            return {
+                ...state,
+                selectedRestaurant: {},
+                error: action.payload.error,
+                loading: false
+            }
+        }
         case GET_RESTAURANTS: {
             return {
                 ...state,

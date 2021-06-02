@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useMemo} from "react";
 
 export const getDayNameByNumber = (dateNumber: number) => {
     switch (dateNumber) {
@@ -24,4 +24,8 @@ export const getDayNameByNumber = (dateNumber: number) => {
             return "Sunday"
         }
     }
+}
+
+export const FullAddress = (values: any) =>  {
+    return `${values.restaurantDetails.streetAndNumber},${values.restaurantDetails.city}`
 }

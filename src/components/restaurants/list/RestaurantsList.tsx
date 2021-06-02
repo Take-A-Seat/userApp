@@ -4,11 +4,12 @@ import {getAllRestaurants, getAllSpecifics, getAllTypesRestaurant} from "../Rest
 import {useRestaurantsDispatch, useRestaurantsState} from "../RestaurantsContext";
 import {LoaderComponent} from "../../globals/Loader/Loader";
 import RestaurantContainer from "../form/RestaurantContainer";
+import _ from "lodash";
 
 const RestaurantsList = () => {
     const dispatch = useRestaurantsDispatch();
     const restaurantState = useRestaurantsState();
-    const {restaurants, loading,listSpecifics,listTypes} = restaurantState;
+    const {restaurants, loading, listSpecifics, listTypes} = restaurantState;
     useEffect(() => {
         getAllRestaurants({dispatch: dispatch});
         getAllSpecifics({dispatch: dispatch});
@@ -22,12 +23,13 @@ const RestaurantsList = () => {
         return (
             <PageWrapper>
                 <RestaurantsListContainer>
-                    {restaurants.map((restaurant: any, index) => {
-                        return <RestaurantContainer values={restaurant} listSpecifics={listSpecifics} listTypes={listTypes}/>
+                    {restaurants && !_.isEmpty(restaurants) && restaurants.map((restaurant: any, index) => {
+                        return <RestaurantContainer key={index} values={restaurant} listSpecifics={listSpecifics}
+                                                    listTypes={listTypes} />
                     })}
                 </RestaurantsListContainer>
             </PageWrapper>
-)
+        )
 }
 
 export default RestaurantsList;
