@@ -4,6 +4,7 @@ export const RED_DELETE = "#F53649";
 export const BACKGROUND_DELETE = "#FFFFFF";
 export const THRD_BUTTON = "#262525";
 export const GREY_TEXT_COLOR="#333"
+export const BLUE_COLOR_HYPERLINK="#29abe2";
 export const VERY_DARK_GREY_COLOR = "#4A4A4A";
 export const COLOR_INPUT_BACKGROUND = "#353535";
 export const TEXT_COLOR_INPUT = "#fff"

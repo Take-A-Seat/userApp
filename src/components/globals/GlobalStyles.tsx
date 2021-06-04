@@ -540,3 +540,9 @@ export const SpecificElement = styled.div<any>`
   margin-right:0;
   `}
 `
+
+export const StickyContainer = styled.div`
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+`

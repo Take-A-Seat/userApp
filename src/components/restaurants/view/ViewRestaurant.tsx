@@ -6,11 +6,14 @@ import {useRestaurantsDispatch, useRestaurantsState} from "../RestaurantsContext
 import {getAllSpecifics, getAllTypesRestaurant, getRestaurantById} from "../RestaurantsActions";
 import {LoaderComponent} from "../../globals/Loader/Loader";
 import {
-    DescriptionAndMapSection,
+    ContainerCharacteristics,
     DescriptionText,
     DetailsRestaurantCard,
     ImagesGalleryContainer,
-    ImagesGallerySection
+    ImagesGallerySection,
+    ProgramContainer,
+    SectionViewRestaurant,
+    TitleBoldProgram
 } from "./style";
 import {
     Button,
@@ -25,6 +28,8 @@ import chefHat from '@iconify-icons/mdi/chef-hat';
 import _ from "lodash";
 import MaterialIcon from "../../globals/MaterialIcons";
 import {FullAddress} from "../../../helpers/sharedFunctions";
+import Map from "../../globals/Maps/Map";
+import {ProgramElement} from "./ProgramElement";
 
 export type MatchParams = {
     restaurantId: string;
@@ -64,32 +69,64 @@ const ViewRestaurant = ({match}: ViewRestaurantParams) => {
     }, [match.params.restaurantId])
     console.log(error)
     console.log("selectedRestaurant", selectedRestaurant)
+    let d = new Date();
+    var numberDay = d.getDay();
+    console.log(numberDay)
     let fullAddress = selectedRestaurant && !_.isEmpty(selectedRestaurant) && FullAddress(selectedRestaurant)
     return !loading ? <PageWrapper centerPage>
-        <ImagesGallerySection>
-            <ImagesGalleryContainer>
-                <ImageGallery items={images} lazyLoad={true} slideDuration={1500} useTranslate3D={true}/>
-            </ImagesGalleryContainer>
-            <DetailsRestaurantCard>
-                <TitleRestaurant>{selectedRestaurant.restaurantDetails && selectedRestaurant.restaurantDetails.name}</TitleRestaurant>
-                {/*TO-DO de adaugat stele in functie de rating*/}
-                <Button redButton customWidth={"100%"} centerText>Reserve a table online</Button>
-                <SpecificAndTypeSectionContainer withPaddingTop>
-                    <Icon icon={chefHat}/>
-                    {selectedRestaurant && !_.isEmpty(selectedRestaurant.listSpecifics) && selectedRestaurant.listSpecifics.map((element: any) => {
-                        let index = listSpecifics.findIndex(specific => specific.id == element.specificRestaurantId)
-                        return <SpecificElement noBackgroundAndMargin>{listSpecifics[index].name}</SpecificElement>
-                    })}
-                </SpecificAndTypeSectionContainer>
-                <LocationRestaurant paddingTop><MaterialIcon
-                    iconName={"location_on"}/> {fullAddress}
-                </LocationRestaurant>
-            </DetailsRestaurantCard>
-        </ImagesGallerySection>
-        <DescriptionAndMapSection>
-           <DescriptionText>{selectedRestaurant && selectedRestaurant.restaurantDetails ? selectedRestaurant.restaurantDetails.description : ""}</DescriptionText>
-        </DescriptionAndMapSection>
-    </PageWrapper> : <LoaderComponent/>
+            <ImagesGallerySection>
+                <ImagesGalleryContainer>
+                    <ImageGallery items={images} lazyLoad={true} slideDuration={3500} useTranslate3D={true} autoPlay={true}/>
+                </ImagesGalleryContainer>
+                <DetailsRestaurantCard>
+                    <TitleRestaurant>{selectedRestaurant.restaurantDetails && selectedRestaurant.restaurantDetails.name}</TitleRestaurant>
+                    {/*TO-DO de adaugat stele in functie de rating*/}
+                    <Button redButton customWidth={"100%"} centerText>Reserve a table online</Button>
+                    <SpecificAndTypeSectionContainer withPaddingTop>
+                        <Icon icon={chefHat}/>
+                        {selectedRestaurant && !_.isEmpty(selectedRestaurant.listSpecifics) && selectedRestaurant.listSpecifics.map((element: any) => {
+                            let index = listSpecifics.findIndex(specific => specific.id == element.specificRestaurantId)
+                            return <SpecificElement noBackgroundAndMargin>{listSpecifics[index].name}</SpecificElement>
+                        })}
+                    </SpecificAndTypeSectionContainer>
+                    <LocationRestaurant paddingTop><MaterialIcon
+                        iconName={"location_on"}/> {fullAddress}
+                    </LocationRestaurant>
+                </DetailsRestaurantCard>
+            </ImagesGallerySection>
+            <SectionViewRestaurant>
+                <DescriptionText>{selectedRestaurant && selectedRestaurant.restaurantDetails ? selectedRestaurant.restaurantDetails.description : ""}</DescriptionText>
+                <Map lat={selectedRestaurant.restaurantDetails != undefined ? selectedRestaurant.restaurantDetails.lat : 45}
+                     lng={selectedRestaurant.restaurantDetails != undefined ? selectedRestaurant.restaurantDetails.lng : 45}/>
+            </SectionViewRestaurant>
+            <SectionViewRestaurant program={true}>
+                <DescriptionText>
+                    <ProgramContainer>
+                        <TitleBoldProgram>Program</TitleBoldProgram>
+                        {
+                            selectedRestaurant.restaurantDetails != {} && !_.isEmpty(selectedRestaurant.restaurantDetails) && selectedRestaurant.restaurantDetails.program.map((program: any, index: number) => {
+                                return <ProgramElement program={program} boldText={index + 1 == numberDay}/>
+                            })
+                        }
+                    </ProgramContainer>
+                </DescriptionText>
+                <ContainerCharacteristics>
+                    <TitleBoldProgram>Characteristics</TitleBoldProgram>
+                    <SpecificAndTypeSectionContainer>
+                        {
+                            selectedRestaurant.listTypes != [] && !_.isEmpty(selectedRestaurant.listTypes) && selectedRestaurant.listTypes.map((typeRestaurant: any, index: number) => {
+                                const typeRestaurantFind = listTypes.find((element) => element.id == typeRestaurant.typeRestaurantId)
+                                return <SpecificElement
+                                    key={index}>{typeRestaurantFind != undefined ? typeRestaurantFind.name : ""}</SpecificElement>
+                            })
+                        }
+                    </SpecificAndTypeSectionContainer>
+
+                </ContainerCharacteristics>
+            </SectionViewRestaurant>
+        </PageWrapper>
+        :
+        <LoaderComponent/>
 }
 
 export default withRouter(ViewRestaurant);
