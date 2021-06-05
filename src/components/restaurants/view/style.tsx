@@ -31,6 +31,7 @@ export const DetailsRestaurantCard = styled.div`
     box-shadow: 0 15px 30px 0 rgba(0, 0, 0, 0.2);
     border-radius: 5px;
     width: 30em;
+    align-self: flex-start;
   }
   color: ${GREY_TEXT_COLOR};
 

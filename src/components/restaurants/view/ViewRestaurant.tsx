@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {RouteComponentProps, withRouter} from "react-router-dom";
+import {RouteComponentProps, useHistory, withRouter} from "react-router-dom";
 import ImageGallery from 'react-image-gallery';
 import "react-image-gallery/styles/css/image-gallery.css";
 import {useRestaurantsDispatch, useRestaurantsState} from "../RestaurantsContext";
@@ -30,6 +30,7 @@ import MaterialIcon from "../../globals/MaterialIcons";
 import {FullAddress} from "../../../helpers/sharedFunctions";
 import Map from "../../globals/Maps/Map";
 import {ProgramElement} from "./ProgramElement";
+import BreadCrumbs from "../../globals/breadCrumbs/BreadCrumbs";
 
 export type MatchParams = {
     restaurantId: string;
@@ -61,34 +62,48 @@ const ViewRestaurant = ({match}: ViewRestaurantParams) => {
     const dispatch = useRestaurantsDispatch();
     const restaurantState = useRestaurantsState();
     const {loading, listSpecifics, listTypes, error, selectedRestaurant} = restaurantState;
-
+    const history = useHistory();
     useEffect(() => {
         getRestaurantById({dispatch: dispatch, restaurantId: match.params.restaurantId})
         getAllTypesRestaurant({dispatch: dispatch});
         getAllSpecifics({dispatch: dispatch})
     }, [match.params.restaurantId])
-    console.log(error)
+
+
     console.log("selectedRestaurant", selectedRestaurant)
     let d = new Date();
-    var numberDay = d.getDay();
-    console.log(numberDay)
+    let numberDay = d.getDay();
+
     let fullAddress = selectedRestaurant && !_.isEmpty(selectedRestaurant) && FullAddress(selectedRestaurant)
-    return !loading ? <PageWrapper centerPage>
+    return !loading ? <PageWrapper centerPage customWidth={"75%"}>
+            <BreadCrumbs/>
             <ImagesGallerySection>
                 <ImagesGalleryContainer>
-                    <ImageGallery items={images} lazyLoad={true} slideDuration={3500} useTranslate3D={true} autoPlay={true}/>
+                    <ImageGallery items={images} lazyLoad={true} slideDuration={3500} useTranslate3D={true}
+                                  autoPlay={true}/>
                 </ImagesGalleryContainer>
                 <DetailsRestaurantCard>
                     <TitleRestaurant>{selectedRestaurant.restaurantDetails && selectedRestaurant.restaurantDetails.name}</TitleRestaurant>
                     {/*TO-DO de adaugat stele in functie de rating*/}
-                    <Button redButton customWidth={"100%"} centerText>Reserve a table online</Button>
+                    <Button redButton
+                            customWidth={"100%"}
+                            centerText
+                            onClick={() => history.push(`/restaurant/${selectedRestaurant.restaurantDetails.id}/reservation`)}>Reserve
+                        a table online</Button>
                     <SpecificAndTypeSectionContainer withPaddingTop>
                         <Icon icon={chefHat}/>
                         {selectedRestaurant && !_.isEmpty(selectedRestaurant.listSpecifics) && selectedRestaurant.listSpecifics.map((element: any) => {
-                            let index = listSpecifics.findIndex(specific => specific.id == element.specificRestaurantId)
-                            return <SpecificElement noBackgroundAndMargin>{listSpecifics[index].name}</SpecificElement>
+                            let index = listSpecifics.find(specific => specific.id === element.specificRestaurantId)
+                            return <SpecificElement
+                                noBackgroundAndMargin>{index != undefined ? index.name : ""}</SpecificElement>
                         })}
                     </SpecificAndTypeSectionContainer>
+                    <Button secondaryButton
+                            customWidth={"100%"}
+                            centerText
+                            onClick={() => history.push(`/restaurant/${selectedRestaurant.restaurantDetails.id}/menu`)}>
+                        See the meniu
+                    </Button>
                     <LocationRestaurant paddingTop><MaterialIcon
                         iconName={"location_on"}/> {fullAddress}
                     </LocationRestaurant>
@@ -96,16 +111,17 @@ const ViewRestaurant = ({match}: ViewRestaurantParams) => {
             </ImagesGallerySection>
             <SectionViewRestaurant>
                 <DescriptionText>{selectedRestaurant && selectedRestaurant.restaurantDetails ? selectedRestaurant.restaurantDetails.description : ""}</DescriptionText>
-                <Map lat={selectedRestaurant.restaurantDetails != undefined ? selectedRestaurant.restaurantDetails.lat : 45}
-                     lng={selectedRestaurant.restaurantDetails != undefined ? selectedRestaurant.restaurantDetails.lng : 45}/>
+                <Map
+                    lat={selectedRestaurant.restaurantDetails !== undefined ? selectedRestaurant.restaurantDetails.lat : 45}
+                    lng={selectedRestaurant.restaurantDetails !== undefined ? selectedRestaurant.restaurantDetails.lng : 45}/>
             </SectionViewRestaurant>
             <SectionViewRestaurant program={true}>
                 <DescriptionText>
                     <ProgramContainer>
                         <TitleBoldProgram>Program</TitleBoldProgram>
                         {
-                            selectedRestaurant.restaurantDetails != {} && !_.isEmpty(selectedRestaurant.restaurantDetails) && selectedRestaurant.restaurantDetails.program.map((program: any, index: number) => {
-                                return <ProgramElement program={program} boldText={index + 1 == numberDay}/>
+                            selectedRestaurant.restaurantDetails !== {} && !_.isEmpty(selectedRestaurant.restaurantDetails) && selectedRestaurant.restaurantDetails.program.map((program: any, index: number) => {
+                                return <ProgramElement program={program} boldText={index + 1 === numberDay}/>
                             })
                         }
                     </ProgramContainer>
@@ -114,10 +130,10 @@ const ViewRestaurant = ({match}: ViewRestaurantParams) => {
                     <TitleBoldProgram>Characteristics</TitleBoldProgram>
                     <SpecificAndTypeSectionContainer>
                         {
-                            selectedRestaurant.listTypes != [] && !_.isEmpty(selectedRestaurant.listTypes) && selectedRestaurant.listTypes.map((typeRestaurant: any, index: number) => {
-                                const typeRestaurantFind = listTypes.find((element) => element.id == typeRestaurant.typeRestaurantId)
+                            selectedRestaurant.listTypes !== [] && !_.isEmpty(selectedRestaurant.listTypes) && selectedRestaurant.listTypes.map((typeRestaurant: any, index: number) => {
+                                const typeRestaurantFind = listTypes.find((element) => element.id === typeRestaurant.typeRestaurantId)
                                 return <SpecificElement
-                                    key={index}>{typeRestaurantFind != undefined ? typeRestaurantFind.name : ""}</SpecificElement>
+                                    key={index}>{typeRestaurantFind !== undefined ? typeRestaurantFind.name : ""}</SpecificElement>
                             })
                         }
                     </SpecificAndTypeSectionContainer>

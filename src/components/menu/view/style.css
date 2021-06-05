@@ -1,0 +1,22 @@
+.Collapsible__trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.Collapsible__trigger.is-open i {
+    transform: rotate(180deg);
+}
+
+.Collapsible {
+    width: 85%;
+    padding: 20px 0;
+}
+
+
+.Collapsible > span {
+    font-size: 22px;
+    font-weight: 600;
+    color: darkslategrey;
+}

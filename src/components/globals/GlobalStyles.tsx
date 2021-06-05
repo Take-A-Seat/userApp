@@ -1,6 +1,7 @@
 import styled from "styled-components"
 import {
   BIG_FONT_SIZE,
+  BLACK_COLOR,
   BLUE_COLOR,
   DARK_GREY2_COLOR,
   DARK_GREY_COLOR,
@@ -14,7 +15,6 @@ import {
   RED_COLOR_BUTTON,
   RED_DELETE,
   SETTINGS_BACKGROUND_GREY,
-  THRD_BUTTON,
   VERY_DARK_GREY_COLOR,
   WHITE_COLOR
 } from "../../constants/styleConstants";
@@ -41,11 +41,11 @@ export const PageWrapper = styled.div<any>`
   height: fit-content;
   width: 100%;
   display: flex;
-  position: relative;
   flex-direction: column;
-  padding: 45px 50px 150px 50px;
+  padding: 15px 50px 150px 50px;
+  box-shadow: 0 15px 30px 0 rgba(0, 0, 0, 0.3);
   @media only screen and (max-width: 600px) {
-    padding: 5px 0;
+    padding: 15px 0;
   }
   ${({centerPage}) => centerPage && `
   justify-content:center;
@@ -73,6 +73,21 @@ export const PageWrapper = styled.div<any>`
   ${({paddingRight}) => paddingRight && `
     padding-right:${paddingRight};
   `}
+
+  ${({customWidth}) => customWidth && `
+   @media only screen and (min-width: 1000px) {
+    width:${customWidth};
+  }
+  `}
+
+
+  ${({fullHeight}) => fullHeight && `
+   height:auto;
+   justify-content:flex-start;
+  `}
+
+
+
 `;
 
 export const FlexWrapper = styled.div`
@@ -162,9 +177,9 @@ export const Button = styled.div<any>`
     `}
 
   ${({secondaryButton}) => secondaryButton && `
-        color:${WHITE_COLOR};
-        background-color:${THRD_BUTTON};
-        border:1px solid ${BLUE_COLOR};
+        color:${BLACK_COLOR};
+        background-color:${WHITE_COLOR};
+        border:1px solid ${RED_COLOR_BUTTON};
 
     `}
   ${({tertiaryButton}) => tertiaryButton && `
@@ -496,9 +511,14 @@ export const LocationRestaurant = styled.p<any>`
   margin-top: 5px;
   font-size: 15px;
   color: ${GREY_TEXT_COLOR};
+
   & i {
     font-size: 15px;
     padding-right: 6px;
+  }
+
+  ::first-letter {
+    text-transform: uppercase;
   }
 
   ${({paddingTop}) => paddingTop && `
@@ -544,5 +564,8 @@ export const SpecificElement = styled.div<any>`
 export const StickyContainer = styled.div`
   position: -webkit-sticky; /* Safari */
   position: sticky;
-  top: 0;
+  top: 55px;
+  width: 100%;
+  overflow: hidden;
+  display: block;
 `
