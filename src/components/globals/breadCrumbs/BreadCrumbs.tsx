@@ -78,8 +78,8 @@ const BreadCrumbs = () => {
             name: "menu",
             label: `Menu`,
         }, {
-            name: "reservation",
-            label: `Reservation`,
+            name: "reservation-add",
+            label: `Create Reservation`,
         }
     ];
 

@@ -24,7 +24,7 @@ const MenuView = ({match}: MenuViewParams) => {
     const dispatch = useRestaurantsDispatch();
     useEffect(() => {
         getMenuByRestaurantId({dispatch: dispatch, restaurantId: match.params.restaurantId})
-        if (selectedRestaurant.restaurantDetails == {} || selectedRestaurant.restaurantDetails.name === undefined) {
+        if (_.isEmpty(selectedRestaurant.restaurantDetails)|| selectedRestaurant.restaurantDetails.id != match.params.restaurantId) {
             getRestaurantById({dispatch: dispatch, restaurantId: match.params.restaurantId})
         }
     }, [match.params.restaurantId])

@@ -25,6 +25,11 @@ import {
     GET_RESTAURANTS_FAIL,
     GET_RESTAURANTS_SUCCESS
 } from "./RestaurantsActions";
+import {
+    CREATE_RESERVATION, CREATE_RESERVATION_FAIL,
+    CREATE_RESERVATION_SUCCESS,
+    GET_AVAILABLE_HOURS_SUCCESS_CLOSED
+} from "../reservation/ReservationActions";
 
 type State = {
     loading: boolean,
@@ -48,7 +53,7 @@ const RestaurantsStateContext = createContext<State | undefined>(undefined)
 const RestaurantsDispatchContext = createContext<Dispatch | undefined>(undefined)
 
 const initialState: State = {
-    loading: false,
+    loading: true,
     error: {},
     menu: {},
     selectedRestaurant: {
@@ -68,6 +73,7 @@ const restaurantReducer = (state: State, action: Action) => {
     const {addToast} = useToasts();
 
     switch (action.type) {
+
         case GET_RESTAURANT_BY_ID: {
             return {
                 ...state,
@@ -202,6 +208,13 @@ const restaurantReducer = (state: State, action: Action) => {
                 ...state,
                 loading: false,
                 error: action.payload.error
+            }
+        }
+        case GET_AVAILABLE_HOURS_SUCCESS_CLOSED:{
+            return {
+                ...state,
+                loading: false,
+                error:"Close day"
             }
         }
 

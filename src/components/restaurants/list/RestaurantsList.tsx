@@ -11,25 +11,21 @@ const RestaurantsList = () => {
     const restaurantState = useRestaurantsState();
     const {restaurants, loading, listSpecifics, listTypes} = restaurantState;
     useEffect(() => {
-        getAllRestaurants({dispatch: dispatch});
         getAllSpecifics({dispatch: dispatch});
         getAllTypesRestaurant({dispatch: dispatch})
+        getAllRestaurants({dispatch: dispatch});
     }, [])
 
-    console.log(restaurants)
-    if (loading) {
-        return <LoaderComponent/>
-    } else
-        return (
-            <PageWrapper>
+    console.log(loading)
+        return !loading?<PageWrapper>
                 <RestaurantsListContainer>
                     {restaurants && !_.isEmpty(restaurants) && restaurants.map((restaurant: any, index) => {
                         return <RestaurantContainer key={index} values={restaurant} listSpecifics={listSpecifics}
                                                     listTypes={listTypes} />
                     })}
                 </RestaurantsListContainer>
-            </PageWrapper>
-        )
+            </PageWrapper>:<LoaderComponent/>
+
 }
 
 export default RestaurantsList;

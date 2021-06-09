@@ -12,6 +12,9 @@ import {
     ImagesGalleryContainer,
     ImagesGallerySection,
     ProgramContainer,
+    ProgramElementContainer,
+    SectionElement,
+    SectionName,
     SectionViewRestaurant,
     TitleBoldProgram
 } from "./style";
@@ -64,16 +67,22 @@ const ViewRestaurant = ({match}: ViewRestaurantParams) => {
     const {loading, listSpecifics, listTypes, error, selectedRestaurant} = restaurantState;
     const history = useHistory();
     useEffect(() => {
-        getRestaurantById({dispatch: dispatch, restaurantId: match.params.restaurantId})
-        getAllTypesRestaurant({dispatch: dispatch});
-        getAllSpecifics({dispatch: dispatch})
+        if (_.isEmpty(listTypes)) {
+            getAllTypesRestaurant({dispatch: dispatch});
+        }
+
+        if (_.isEmpty(listSpecifics)) {
+            getAllSpecifics({dispatch: dispatch})
+        }
+
+        if (_.isEmpty(selectedRestaurant.restaurantDetails) || selectedRestaurant.restaurantDetails.id != match.params.restaurantId) {
+            getRestaurantById({dispatch: dispatch, restaurantId: match.params.restaurantId})
+        }
     }, [match.params.restaurantId])
 
 
-    console.log("selectedRestaurant", selectedRestaurant)
     let d = new Date();
     let numberDay = d.getDay();
-
     let fullAddress = selectedRestaurant && !_.isEmpty(selectedRestaurant) && FullAddress(selectedRestaurant)
     return !loading ? <PageWrapper centerPage customWidth={"75%"}>
             <BreadCrumbs/>
@@ -88,7 +97,7 @@ const ViewRestaurant = ({match}: ViewRestaurantParams) => {
                     <Button redButton
                             customWidth={"100%"}
                             centerText
-                            onClick={() => history.push(`/restaurant/${selectedRestaurant.restaurantDetails.id}/reservation`)}>Reserve
+                            onClick={() => history.push(`/restaurant/${selectedRestaurant.restaurantDetails.id}/reservation-add`)}>Reserve
                         a table online</Button>
                     <SpecificAndTypeSectionContainer withPaddingTop>
                         <Icon icon={chefHat}/>
@@ -121,7 +130,7 @@ const ViewRestaurant = ({match}: ViewRestaurantParams) => {
                         <TitleBoldProgram>Program</TitleBoldProgram>
                         {
                             selectedRestaurant.restaurantDetails !== {} && !_.isEmpty(selectedRestaurant.restaurantDetails) && selectedRestaurant.restaurantDetails.program.map((program: any, index: number) => {
-                                return <ProgramElement program={program} boldText={index + 1 === numberDay}/>
+                                return <ProgramElement program={program} boldText={(index + 1) % 7 === numberDay}/>
                             })
                         }
                     </ProgramContainer>
@@ -137,8 +146,26 @@ const ViewRestaurant = ({match}: ViewRestaurantParams) => {
                             })
                         }
                     </SpecificAndTypeSectionContainer>
-
                 </ContainerCharacteristics>
+            </SectionViewRestaurant>
+            <SectionViewRestaurant program={true} alignRight={true}>
+                <TitleBoldProgram>Contact</TitleBoldProgram>
+                <ProgramContainer>
+                    {
+                        selectedRestaurant.restaurantDetails && !_.isEmpty(selectedRestaurant.restaurantDetails) ? <>
+                            <ProgramElementContainer><SectionName>Phone</SectionName><SectionElement> {selectedRestaurant.restaurantDetails.phone}</SectionElement></ProgramElementContainer>
+                            {selectedRestaurant.restaurantDetails.website != "" ?
+                                <ProgramElementContainer><SectionName>Website</SectionName><SectionElement>{selectedRestaurant.restaurantDetails.website}</SectionElement></ProgramElementContainer> : null}
+                            {selectedRestaurant.restaurantDetails.facebook != "" ?
+                                <ProgramElementContainer><SectionName>Facebook</SectionName><SectionElement>{selectedRestaurant.restaurantDetails.facebook}</SectionElement></ProgramElementContainer> : null}
+                            {selectedRestaurant.restaurantDetails.instagram != "" ?
+                                <ProgramElementContainer><SectionName>Instagram</SectionName><SectionElement>{selectedRestaurant.restaurantDetails.instagram}</SectionElement></ProgramElementContainer> : null}
+                            {selectedRestaurant.restaurantDetails.twitter != "" ?
+                                <ProgramElementContainer><SectionName>Twitter</SectionName><SectionElement>{selectedRestaurant.restaurantDetails.twitter}</SectionElement></ProgramElementContainer> : null}
+                        </> : null
+                    }
+
+                </ProgramContainer>
             </SectionViewRestaurant>
         </PageWrapper>
         :

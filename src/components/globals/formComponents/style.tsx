@@ -2,20 +2,20 @@ import styled from 'styled-components'
 
 import {Button} from 'reactstrap';
 import {
-    BIG_FONT_SIZE,
-    BLUE_COLOR,
-    BORDER_INPUT,
-    BORDER_SWITCH,
-    COLOR_INPUT_BACKGROUND,
-    DARK_GREY_COLOR,
-    INPUT_PLACEHOLDER,
-    LIGHT_GRAY,
-    NORMAL_FONT_SIZE,
-    ORANGE_COLOR,
-    RED_COLOR,
-    TEXT_COLOR_INPUT,
-    VERY_DARK_GREY_COLOR,
-    WHITE_COLOR
+  BIG_FONT_SIZE, BLACK_COLOR,
+  BLUE_COLOR,
+  BORDER_INPUT,
+  BORDER_SWITCH,
+  COLOR_INPUT_BACKGROUND,
+  DARK_GREY_COLOR,
+  INPUT_PLACEHOLDER,
+  LIGHT_GRAY,
+  NORMAL_FONT_SIZE,
+  ORANGE_COLOR,
+  RED_COLOR, RED_COLOR_BUTTON,
+  TEXT_COLOR_INPUT,
+  VERY_DARK_GREY_COLOR,
+  WHITE_COLOR
 } from "../../../constants/styleConstants";
 
 export const SectionSettings = styled.div<any>`
@@ -223,6 +223,14 @@ export const FieldText = styled.div<any>`
     flex-direction: column;
     align-items: flex-start;
   }
+
+  ${({customPaddingTopInput}) => customPaddingTopInput && `
+         padding-top:${customPaddingTopInput};
+    `}
+  ${({customPaddingBottomInput}) => customPaddingBottomInput && `
+         padding-bottom:${customPaddingBottomInput};
+    `}
+  
 `
 
 export const FieldTextTitleSection = styled.div<any>`
@@ -349,16 +357,16 @@ export const InputsWrapper = styled.div`
   align-items: center;
 `;
 export const CustomStyledInput = styled.input<any>`
-  color: ${TEXT_COLOR_INPUT} !important;
-  background-color: ${COLOR_INPUT_BACKGROUND};
+  color: ${VERY_DARK_GREY_COLOR} !important;
+  background-color: ${WHITE_COLOR};
   font-size: 14px;
   line-height: 1.6;
   text-align: left;
-  height: 20px;
+  height: 44px;
   width: auto;
   min-width: 100px;
   max-width: 100%;
-  border: 1px solid transparent;
+  border: 1px solid ${BORDER_INPUT};
   font-family: "Open Sans", sans-serif;
   border-radius: 4px;
   padding: 15px;
@@ -382,7 +390,7 @@ export const CustomStyledInput = styled.input<any>`
   :-webkit-autofill:focus,
   :-webkit-autofill:active {
     transition: background-color 5000s ease-in-out 0s;
-    -webkit-text-fill-color: ${WHITE_COLOR};
+    -webkit-text-fill-color: ${BLACK_COLOR};
   }
 
   ::-webkit-outer-spin-button,
@@ -446,6 +454,10 @@ export const CustomStyledInput = styled.input<any>`
 
   ${({alignRight}) => alignRight && `
      margin-left:auto;
+      `}
+  
+  ${({customPadding}) => customPadding && `
+     padding:${customPadding}
       `}
 
 `;
@@ -583,6 +595,11 @@ export const DatePickerWrapper = styled.div<any>`
       color: ${BORDER_INPUT};
     }
 
+    :focus {
+      border: 1px solid ${BLUE_COLOR} !important;
+      outline: none !important;
+    }
+
     transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     ${({error}) => error && `
             border:1px solid red!important;
@@ -590,8 +607,8 @@ export const DatePickerWrapper = styled.div<any>`
   }
 
   .CalendarDay__selected, .CalendarDay__selected:active, .CalendarDay__selected:hover {
-    background: ${ORANGE_COLOR};
-    border: 1px double ${ORANGE_COLOR};
+    background: ${RED_COLOR_BUTTON};
+    border: 1px double ${RED_COLOR_BUTTON};
     color: #fff;
   }
 

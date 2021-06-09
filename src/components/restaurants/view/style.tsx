@@ -40,7 +40,7 @@ export const DetailsRestaurantCard = styled.div`
   }
 `
 
-export const SectionViewRestaurant = styled.div<{ program?: boolean }>`
+export const SectionViewRestaurant = styled.div<{ program?: boolean, alignRight?: boolean }>`
   display: flex;
   flex-direction: column;
   padding: 0 2em 5px 2em;
@@ -50,11 +50,26 @@ export const SectionViewRestaurant = styled.div<{ program?: boolean }>`
     flex-direction: row;
     margin-right: auto;
     justify-content: center;
+
   }
   ${({program}) => program && `
   width:100%;
   margin-top: 30px;
+  `}
+
+  ${({alignRight}) => alignRight && `
   
+  @media only screen and (min-width: 1000px) {
+      flex-direction: column;
+      justify-content: flex-start;
+    align-items:flex-start;
+}
+  @media only screen and (min-width: 1700px) {
+     
+      justify-content: flex-start;
+    align-items:center;
+}
+ 
   `}
 `
 
@@ -111,20 +126,20 @@ export const ProgramContainer = styled.div`
   justify-content: center;
   align-items: flex-start;
   width: 320px;
-  
+
 `
 
 export const TitleBoldProgram = styled.span`
   font-size: 14px;
   font-weight: bold;
   margin-bottom: 1em;
-  
+
 `
 
-export const DayNameProgram = styled.span`
+export const SectionName = styled.span`
   font-size: 13px;
 `
-export const ProgramHours = styled.span`
+export const SectionElement = styled.span`
   font-size: 12px;
 `
 
@@ -135,5 +150,5 @@ export const ContainerCharacteristics = styled.div`
     margin-top: 0;
 
   }
-  
+
 `

@@ -1,6 +1,6 @@
 import React from "react";
 import {getDayNameByNumber} from "../../../helpers/sharedFunctions";
-import {DayNameProgram, ProgramElementContainer, ProgramHours} from "./style";
+import {ProgramElementContainer, SectionElement, SectionName} from "./style";
 
 type ProgramElementProps = {
     program: {
@@ -16,6 +16,7 @@ type ProgramElementProps = {
 export const ProgramElement = ({program, boldText}: ProgramElementProps) => {
     const dayName = getDayNameByNumber(program.day)
     return <ProgramElementContainer boldText={boldText}>
-       <DayNameProgram>{dayName}:</DayNameProgram> {!program.close?<ProgramHours>{program.startAt}-{program.endAt}</ProgramHours>:"Close"}
+        <SectionName>{dayName}:</SectionName> {!program.close ?
+        <SectionElement>{program.startAt}-{program.endAt}</SectionElement> : "Close"}
     </ProgramElementContainer>
 }

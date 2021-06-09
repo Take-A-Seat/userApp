@@ -16,11 +16,16 @@ interface TextFieldProps extends FieldProps {
     customFontSize?: number;
     noBorder?: boolean;
     customHeight?: string;
-    customWidthField?:string;
-    customPaddingRight?:string;
-    customMaxWidth?:string;
-    customWidthInput?:string;
-    noMarginTitle?:string;
+    customWidthField?: string;
+    customPaddingRight?: string;
+    customMaxWidth?: string;
+    customWidthInput?: string;
+    customPadding?: string;
+    noMarginTitle?: string;
+    customPaddingTopInput?: string;
+    customPaddingBottomInput?: string;
+    textArea?: boolean;
+
 }
 
 const TextField = ({
@@ -44,7 +49,11 @@ const TextField = ({
                        customHeight,
                        customMaxWidth,
                        customWidthInput,
-    noMarginTitle,
+                       customPadding,
+                       customPaddingBottomInput,
+                       customPaddingTopInput,
+                       noMarginTitle,
+                       textArea,
                        ...props
                    }:
                        TextFieldProps
@@ -58,8 +67,10 @@ const TextField = ({
             noBorder={noBorder}
             smallFields={smallFields}
         >
-            <FieldText>
-                {!noDescription && <FieldTextTitleSection customPaddingRight={customPaddingRight?customPaddingRight:"auto"}>
+            <FieldText customPaddingBottomInput={customPaddingBottomInput}
+                       customPaddingTopInput={customPaddingTopInput}>
+                {!noDescription &&
+                <FieldTextTitleSection customPaddingRight={customPaddingRight ? customPaddingRight : "auto"}>
                     <FieldLabel
                         title
                         noMarginTitle={noMarginTitle}
@@ -81,15 +92,17 @@ const TextField = ({
                     biggerInput={biggerInput}
                     noDescription={!noDescription}
                     customInputWidth={customInputWidth}
+                    as={textArea?"textarea":""}
                     customMaxWidth={customMaxWidth}
                     customWidthInput={customWidthInput}
                     customHeight={customHeight}
                     customFontSize={customFontSize}
                     disabled={disabled}
+                    customPadding={customPadding}
+
                     onBlur={(e: any) => {
                         if (onBlur) {
                             form.handleBlur(e);
-                            onBlur();
                         }
                     }}
                 />

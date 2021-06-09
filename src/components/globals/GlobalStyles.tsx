@@ -150,6 +150,9 @@ export const Button = styled.div<any>`
     margin:auto;
   }
   `}
+  ${({blackText}) => blackText && `
+     color:${BLACK_COLOR};
+  `}
   ${({cancelButton}) => cancelButton && `
     background:transparent;
     border:1px solid ${LIGHT_GRAY};
