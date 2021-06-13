@@ -16,7 +16,6 @@ const RestaurantsList = () => {
         getAllRestaurants({dispatch: dispatch});
     }, [])
 
-    console.log(loading)
         return !loading?<PageWrapper>
                 <RestaurantsListContainer>
                     {restaurants && !_.isEmpty(restaurants) && restaurants.map((restaurant: any, index) => {

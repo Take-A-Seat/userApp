@@ -41,11 +41,11 @@ export const CREATE_RESERVATION_FAIL = "create_reservation_fail";
 
 
 export const createReservation = ({
-                                         dispatch,
-                                         restaurantId,
-                                         values,
-                                         callBack,
-                                     }: { dispatch: Dispatch, restaurantId: string, values: any, callBack: () => void }) => {
+                                      dispatch,
+                                      restaurantId,
+                                      values,
+                                      callBack,
+                                  }: { dispatch: Dispatch, restaurantId: string, values: any, callBack: () => void }) => {
     dispatch({type: CREATE_RESERVATION, payload: {}});
     authFetch(`/bookings/restaurant/${restaurantId}/booking`, {
         method: "POST",
@@ -66,3 +66,70 @@ export const createReservation = ({
         console.log("error", error)
     })
 }
+
+export const GET_RESERVATION = "get_reservation";
+export const GET_RESERVATION_SUCCESS = "get_reservation_success";
+export const GET_RESERVATION_FAIL = "get_reservation_fail";
+
+
+export const getReservation = ({
+                                   dispatch,
+                                   email,
+                                   code,
+                                   restaurantId
+                               }: { dispatch: Dispatch, email: string, code: string, restaurantId: string }) => {
+    dispatch({type: GET_RESERVATION, payload: {}})
+    authFetch(`/bookings/restaurant/${restaurantId}/email/${email}/code/${code}`, {method: "GET"}).then(response => {
+        if (!response.ok) {
+            return response.text().then(error => {
+                dispatch({type: GET_RESERVATION_FAIL, payload: JSON.parse(error)})
+            })
+        }
+        return response.json()
+    }).then(data => {
+        if (data) {
+            return dispatch({type: GET_RESERVATION_SUCCESS, payload: data})
+        }
+
+    }).catch(error => {
+        console.log("error", error)
+    })
+}
+
+export const UPDATE_PRODUCTS_RESERVATION = "update_products_reservation";
+export const UPDATE_PRODUCTS_RESERVATION_SUCCESS = "update_products_reservation_success";
+export const UPDATE_PRODUCTS_RESERVATION_FAIL = "update_products_reservation_fail";
+
+export const updateProductsReservation = ({
+                                              dispatch,
+                                              reservationId,
+                                              values,
+                                              callBack
+                                          }: { dispatch: Dispatch, reservationId: string, values: any, callBack: () => void }) => {
+    dispatch({
+        type: UPDATE_PRODUCTS_RESERVATION,
+        payload: []
+    });
+
+    authFetch(`/bookings/id/${reservationId}/products`, {
+        method: "PUT",
+        body: JSON.stringify(values)
+    }).then(response => {
+        if (!response.ok) {
+            return response.text().then(error => {
+                dispatch({type: UPDATE_PRODUCTS_RESERVATION_FAIL, payload: JSON.parse(error)})
+            })
+        }
+        return response.json()
+    }).then(data => {
+        dispatch({type: UPDATE_PRODUCTS_RESERVATION_SUCCESS, payload: data})
+        if (callBack) {
+            callBack()
+        }
+    }).catch(error => {
+        console.log("err", error)
+    })
+}
+
+
+

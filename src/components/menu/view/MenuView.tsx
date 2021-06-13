@@ -29,7 +29,6 @@ const MenuView = ({match}: MenuViewParams) => {
         }
     }, [match.params.restaurantId])
 
-    console.log(menu)
     return !loading ? <PageWrapper centerPage customWidth={"75%"} fullHeight>
         <BreadCrumbs/>
         {

@@ -28,7 +28,6 @@ const CreateReservation = ({match}: CreateReservationParams) => {
     const {listAvailableReservation, loading, error} = reservationState;
     const {selectedRestaurant} = restaurantState;
     const history = useHistory();
-    console.log(selectedRestaurant)
     useEffect(() => {
         if (_.isEmpty(selectedRestaurant.restaurantDetails) || selectedRestaurant.restaurantDetails.id != match.params.restaurantId) {
             getRestaurantById({dispatch: restaurantDispatch, restaurantId: match.params.restaurantId})

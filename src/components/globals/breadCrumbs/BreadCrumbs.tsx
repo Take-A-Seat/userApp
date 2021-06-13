@@ -6,6 +6,7 @@ import _ from "lodash";
 // @ts-ignore
 import QueryString from "query-string";
 import {useRestaurantsState} from "../../restaurants/RestaurantsContext";
+import {useReservationState} from "../../reservation/ReservationContext";
 
 
 export type BreadCrumbType = {
@@ -43,25 +44,26 @@ export const getBreadCrumbs = ({
         if (pages.length === 0) {
             return
         }
-        if (pages[0] !== "groups") {
-            const foundInItems = _.findIndex(items, item => item.name === pages[0]);
-            const indexInInitialPages = _.findIndex(initialPages, pg => pg === pages[0]);
-            let link = `/${initialPages.slice(0, indexInInitialPages + 1).join('/')}`;
+        const foundInItems = _.findIndex(items, item => item.name === pages[0]);
+        const indexInInitialPages = _.findIndex(initialPages, pg => pg === pages[0]);
+        let link = `/${initialPages.slice(0, indexInInitialPages + 1).join('/')}`;
 
-            if (foundInItems > -1) {
-                if (items[foundInItems].needsSecondLink) {
-                    link = `${link}/${pages[1]}`;
-                    pages.splice(0, 2);
-                } else {
-                    pages.shift()
-                }
-
-                breadCrumbs.push({
-                    name: items[foundInItems].label,
-                    link: link
-                });
-                createBreadCrumbsArray({pages});
+        if (foundInItems > -1) {
+            if (items[foundInItems].needsSecondLink) {
+                link = `${link}/${pages[1]}`;
+                pages.splice(0, 2);
+            } else {
+                pages.shift()
             }
+
+            breadCrumbs.push({
+                name: items[foundInItems].label,
+                link: link
+            });
+            createBreadCrumbsArray({pages});
+        } else {
+            pages.splice(0, 2);
+            createBreadCrumbsArray({pages})
         }
     };
 
@@ -71,8 +73,8 @@ export const getBreadCrumbs = ({
 
 const BreadCrumbs = () => {
     const history = useHistory();
-    const {selectedRestaurant,menu} = useRestaurantsState();
-
+    const {selectedRestaurant, menu} = useRestaurantsState();
+    const {selectedReservation} = useReservationState();
     let items = [
         {
             name: "menu",
@@ -80,7 +82,12 @@ const BreadCrumbs = () => {
         }, {
             name: "reservation-add",
             label: `Create Reservation`,
-        }
+        },
+        {
+            name: "code",
+            label: `Manage Reservation`,
+
+        },
     ];
 
 
@@ -92,7 +99,7 @@ const BreadCrumbs = () => {
             items,
         });
         setBreadCrumbs(bc)
-    }, [history.location.pathname, history.location.search, selectedRestaurant,menu])
+    }, [history.location.pathname, history.location.search, selectedRestaurant, menu, selectedReservation])
 
     return (
         <BreadCrumbsWrapper>

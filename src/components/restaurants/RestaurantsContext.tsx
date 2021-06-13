@@ -46,6 +46,25 @@ type State = {
     fetchListSpecifics: SpecificRestaurant[],
     fetchListTypes: TypeRestaurant[],
 }
+export type ProductFormValuesTypes = {
+    id: string;
+    name: string;
+    ingredients: string;
+    price: number;
+}
+export type MenuFieldsValues = {
+    id: string;
+    restaurantId: string;
+    pages: PagesFieldsValuesTypes[]
+}
+export type PagesFieldsValuesTypes = {
+    number: number;
+    sections: SectionsFormValuesTypes[];
+}
+export type SectionsFormValuesTypes = {
+    titleSection: string;
+    products: ProductFormValuesTypes[]
+}
 
 export type SpecificRestaurant = { id: string, restaurantId: string, specificRestaurantId: string }
 export type TypeRestaurant = { id: string, restaurantId: string, typeRestaurantId: string }
@@ -71,7 +90,6 @@ const initialState: State = {
 const restaurantReducer = (state: State, action: Action) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const {addToast} = useToasts();
-
     switch (action.type) {
 
         case GET_RESTAURANT_BY_ID: {

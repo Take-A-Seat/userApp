@@ -297,6 +297,9 @@ export const FieldError = styled.p<any>`
   ${({alignLeft}) => alignLeft && `
         align-self:flex-start;
     `}
+  ${({alignCenter}) => alignCenter && `
+        align-self:center;
+    `}
 `;
 
 export const FormButtonsWrapper = styled.div<any>`
