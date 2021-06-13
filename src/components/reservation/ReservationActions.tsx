@@ -131,5 +131,37 @@ export const updateProductsReservation = ({
     })
 }
 
+export const UPDATE_ASSISTANCE_RESERVATION = "update_assistance_reservation";
+export const UPDATE_ASSISTANCE_RESERVATION_SUCCESS = "update_assistance_reservation_success";
+export const UPDATE_ASSISTANCE_RESERVATION_FAIL = "update_assistance_reservation_fail";
+
+export const updateAssistanceReservation = ({
+                                                dispatch,
+                                                reservationId,
+                                                values,
+                                                callBack
+                                            }: { dispatch: Dispatch, reservationId: string, values: any, callBack: () => void }) => {
+    dispatch({
+        type: UPDATE_ASSISTANCE_RESERVATION,
+        payload: {}
+    });
+
+    authFetch(`/bookings/id/${reservationId}/assistance`, {method: "PUT", body: JSON.stringify(values)}).then(response => {
+        if (!response.ok) {
+            return response.text().then(error => {
+                dispatch({type: UPDATE_ASSISTANCE_RESERVATION_FAIL, payload: JSON.parse(error)})
+            })
+        }
+        return response.json()
+    }).then(data => {
+        dispatch({type: UPDATE_ASSISTANCE_RESERVATION_SUCCESS, payload: data})
+        if (callBack) {
+            callBack()
+        }
+    }).catch(error => {
+        console.log("err", error)
+    })
+}
+
 
 

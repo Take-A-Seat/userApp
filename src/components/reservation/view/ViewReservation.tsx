@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {useReservationDispatch, useReservationState} from "../ReservationContext";
+import {setupWebSocket, useReservationDispatch, useReservationState} from "../ReservationContext";
 import {LoaderComponent} from "../../globals/Loader/Loader";
 import {FieldError} from "../../globals/formComponents/style";
-import {getReservation, updateProductsReservation} from "../ReservationActions";
+import {getReservation, updateAssistanceReservation, updateProductsReservation} from "../ReservationActions";
 import BreadCrumbs from "../../globals/breadCrumbs/BreadCrumbs";
 import {useRestaurantsDispatch, useRestaurantsState} from "../../restaurants/RestaurantsContext";
 import {getMenuByRestaurantId, getRestaurantById} from "../../restaurants/RestaurantsActions";
@@ -32,8 +32,29 @@ const ViewReservation = ({match}: ViewRestaurantParams) => {
     const dispatch = useReservationDispatch();
     const dispatchRestaurant = useRestaurantsDispatch();
     const {selectedRestaurant, menu} = useRestaurantsState();
-    const {loading, selectedReservation, error} = useReservationState();
+    const {loading, selectedReservation, error, recreateConnection} = useReservationState();
     let [manageReservation, setManageReservationPopup] = useState(false)
+
+    const autoReconnectDelay = 8000
+
+    useEffect(() => {
+            let wsReservation: WebSocket | undefined;
+            if (selectedReservation.id != "" && recreateConnection) {
+                wsReservation = setupWebSocket(selectedReservation.id, dispatch)
+            }
+
+            return () => {
+                setTimeout(() => {
+                    if (wsReservation) {
+                        wsReservation.close();
+                    }
+                }, autoReconnectDelay)
+                console.log('unmounting...')
+            }
+
+
+        }, [selectedReservation, recreateConnection]
+    )
 
     useEffect(() => {
         getReservation({
@@ -43,9 +64,8 @@ const ViewReservation = ({match}: ViewRestaurantParams) => {
             restaurantId: match.params.restaurantId
         })
 
-        if (_.isEmpty(selectedRestaurant.restaurantDetails) || selectedRestaurant.restaurantDetails.id != match.params.restaurantId) {
+        if (!_.isEmpty(selectedRestaurant.restaurantDetails) || selectedRestaurant.restaurantDetails.id != match.params.restaurantId) {
             getRestaurantById({dispatch: dispatchRestaurant, restaurantId: match.params.restaurantId})
-
         }
     }, [match])
 
@@ -83,15 +103,23 @@ const ViewReservation = ({match}: ViewRestaurantParams) => {
                 <MaterialIcon iconName={"comment"}/>
                 <TextDetail>{selectedRestaurant.restaurantDetails ? selectedRestaurant.restaurantDetails.name : ""}: {selectedReservation.messageToClient}</TextDetail>
             </DetailContainer>
-            <DetailContainer>
-                <MaterialIcon iconName={"monetization_on"}/>
-                <TextDetail>Total {selectedReservation.totalToPay}$</TextDetail>
-            </DetailContainer>
+
 
             <DetailContainer>
                 <MaterialIcon iconName={"room_service"}/>
                 <TextDetail>Status Reservation: {selectedReservation.status}</TextDetail>
             </DetailContainer>
+
+            {selectedReservation.needAssistance && <DetailContainer>
+                <MaterialIcon iconName={"help_center"}/>
+                <TextDetail>Need assistance: Wait waiter</TextDetail>
+            </DetailContainer>}
+
+            <DetailContainer>
+                <MaterialIcon iconName={"monetization_on"}/>
+                <TextDetail>Total {selectedReservation.totalToPay}$</TextDetail>
+            </DetailContainer>
+
         </ContainerFields>
         <Button redButton
                 customWidth={"95%"}
@@ -106,6 +134,21 @@ const ViewReservation = ({match}: ViewRestaurantParams) => {
                 centerText
                 onClick={() => alert("To do")}>Cancel Reservation</Button>
         }
+        {!selectedReservation.needAssistance && <Button redButton
+                                                        customWidth={"95%"}
+                                                        customMarginRight={"0"}
+                                                        centerText
+                                                        onClick={() => updateAssistanceReservation({
+                                                            reservationId: selectedReservation.id,
+                                                            dispatch: dispatch,
+                                                            values: {
+                                                                ...selectedReservation,
+                                                                needAssistance: true
+                                                            },
+                                                            callBack: () => {
+                                                            }
+                                                        })}>Need assistance</Button>}
+
 
         <Popup
             show={manageReservation}
@@ -120,16 +163,9 @@ const ViewReservation = ({match}: ViewRestaurantParams) => {
                     setManageReservationPopup(false)
                 }}
                 onSubmit={(values) => {
-                    console.log(values)
                     updateProductsReservation({
                         dispatch: dispatch, reservationId: values.id, values, callBack: () => {
                             setManageReservationPopup(false);
-                            getReservation({
-                                dispatch: dispatch,
-                                restaurantId: values.restaurantId,
-                                code: values.code,
-                                email: values.email
-                            })
                         }
                     })
                 }} initialValues={selectedReservation} menu={menu}/>

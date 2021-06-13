@@ -80,7 +80,6 @@ export const ContainerManageReservation = styled.div`
   overflow-y: scroll;
   overflow-y: -moz-scrollbars-vertical;
   height: 575px;
-    // background-color: ${HEADER_SETTINGS_BACKGROUND};
   @media only screen and (max-width: 600px) {
     padding: 25px 0;
   }
