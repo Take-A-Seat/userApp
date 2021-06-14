@@ -35,6 +35,8 @@ export const SectionSettings = styled.div<any>`
 export const ColumnContainer = styled.div<any>`
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
+  height: 80%;
 `
 
 export const TextSection = styled.span<any>`

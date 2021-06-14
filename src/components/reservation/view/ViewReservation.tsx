@@ -17,6 +17,7 @@ import moment from "moment/moment";
 import ManageReservation from "../form/ManageReservation";
 import Popup from "../../globals/popup/Popup";
 import Logo from "../../../assets/Asset 5 (1).svg";
+import {NoFoundPage} from "../../404/NoFound";
 
 export type MatchParams = {
     restaurantId: string;
@@ -83,71 +84,74 @@ const ViewReservation = ({match}: ViewRestaurantParams) => {
     console.log(error)
     return !loading ? <PageWrapper centerPage customWidth={"75%"} fullHeight>
         <BreadCrumbs/>
-        <AbsoluteContainer>
-            {!_.isEmpty(selectedRestaurant.restaurantDetails) &&
-            <img src={selectedRestaurant.restaurantDetails.logo.path} alt={"Logo"}/>}
-        </AbsoluteContainer>
-        <ContainerFields>
-            <DetailContainer>
-                <MaterialIcon iconName={"event"}/>
-                <TextDetail>{startDate} - {endDate}</TextDetail>
-            </DetailContainer>
-            <DetailContainer>
-                <MaterialIcon iconName={"person"}/> <TextDetail>{selectedReservation.persons} people</TextDetail>
-            </DetailContainer>
-            <DetailContainer>
-                <MaterialIcon iconName={"textsms"}/>
-                <TextDetail>{selectedReservation.firstName}: {selectedReservation.details}</TextDetail>
-            </DetailContainer>
-            <DetailContainer>
-                <MaterialIcon iconName={"comment"}/>
-                <TextDetail>{selectedRestaurant.restaurantDetails ? selectedRestaurant.restaurantDetails.name : ""}: {selectedReservation.messageToClient}</TextDetail>
-            </DetailContainer>
+        {error != "" ? <NoFoundPage/> : <>
+            <AbsoluteContainer>
+                {!_.isEmpty(selectedRestaurant.restaurantDetails) &&
+                <img src={selectedRestaurant.restaurantDetails.logo.path} alt={"Logo"}/>}
+            </AbsoluteContainer>
+            <ContainerFields>
+                <DetailContainer>
+                    <MaterialIcon iconName={"event"}/>
+                    <TextDetail>{startDate} - {endDate}</TextDetail>
+                </DetailContainer>
+                <DetailContainer>
+                    <MaterialIcon iconName={"person"}/> <TextDetail>{selectedReservation.persons} people</TextDetail>
+                </DetailContainer>
+                <DetailContainer>
+                    <MaterialIcon iconName={"textsms"}/>
+                    <TextDetail>{selectedReservation.firstName}: {selectedReservation.details}</TextDetail>
+                </DetailContainer>
+                <DetailContainer>
+                    <MaterialIcon iconName={"comment"}/>
+                    <TextDetail>{selectedRestaurant.restaurantDetails ? selectedRestaurant.restaurantDetails.name : ""}: {selectedReservation.messageToClient}</TextDetail>
+                </DetailContainer>
 
 
-            <DetailContainer>
-                <MaterialIcon iconName={"room_service"}/>
-                <TextDetail>Status Reservation: {selectedReservation.status}</TextDetail>
-            </DetailContainer>
+                <DetailContainer>
+                    <MaterialIcon iconName={"room_service"}/>
+                    <TextDetail>Status Reservation: {selectedReservation.status}</TextDetail>
+                </DetailContainer>
 
-            {selectedReservation.needAssistance && <DetailContainer>
-                <MaterialIcon iconName={"help_center"}/>
-                <TextDetail>Need assistance: Wait waiter</TextDetail>
-            </DetailContainer>}
+                {selectedReservation.needAssistance && <DetailContainer>
+                    <MaterialIcon iconName={"help_center"}/>
+                    <TextDetail>Need assistance: Wait waiter</TextDetail>
+                </DetailContainer>}
 
-            <DetailContainer>
-                <MaterialIcon iconName={"monetization_on"}/>
-                <TextDetail>Total {selectedReservation.totalToPay}$</TextDetail>
-            </DetailContainer>
+                <DetailContainer>
+                    <MaterialIcon iconName={"monetization_on"}/>
+                    <TextDetail>Total {selectedReservation.totalToPay}$</TextDetail>
+                </DetailContainer>
 
-        </ContainerFields>
-        <Button redButton
-                customWidth={"95%"}
-                customMarginRight={"0"}
-                centerText
-                onClick={() => setManageReservationPopup(true)}>Edit order</Button>
+            </ContainerFields>
+            <Button redButton
+                    customWidth={"95%"}
+                    customMarginRight={"0"}
+                    centerText
+                    onClick={() => setManageReservationPopup(true)}>Edit order</Button>
 
-        {selectedReservation.status == "Pending" || selectedReservation.status == "Wait Client" &&
-        <Button redButton
-                customWidth={"95%"}
-                customMarginRight={"0"}
-                centerText
-                onClick={() => alert("To do")}>Cancel Reservation</Button>
-        }
-        {!selectedReservation.needAssistance && <Button redButton
-                                                        customWidth={"95%"}
-                                                        customMarginRight={"0"}
-                                                        centerText
-                                                        onClick={() => updateAssistanceReservation({
-                                                            reservationId: selectedReservation.id,
-                                                            dispatch: dispatch,
-                                                            values: {
-                                                                ...selectedReservation,
-                                                                needAssistance: true
-                                                            },
-                                                            callBack: () => {
-                                                            }
-                                                        })}>Need assistance</Button>}
+            {selectedReservation.status == "Pending" || selectedReservation.status == "Wait Client" &&
+            <Button redButton
+                    customWidth={"95%"}
+                    customMarginRight={"0"}
+                    centerText
+                    onClick={() => alert("To do")}>Cancel Reservation</Button>
+            }
+            {!selectedReservation.needAssistance && selectedReservation.status == "Active" && <Button redButton
+                                                                                                      customWidth={"95%"}
+                                                                                                      customMarginRight={"0"}
+                                                                                                      centerText
+                                                                                                      onClick={() => updateAssistanceReservation({
+                                                                                                          reservationId: selectedReservation.id,
+                                                                                                          dispatch: dispatch,
+                                                                                                          values: {
+                                                                                                              ...selectedReservation,
+                                                                                                              needAssistance: true
+                                                                                                          },
+                                                                                                          callBack: () => {
+                                                                                                          }
+                                                                                                      })}>Need
+                assistance</Button>}
+        </>}
 
 
         <Popup
@@ -170,7 +174,6 @@ const ViewReservation = ({match}: ViewRestaurantParams) => {
                     })
                 }} initialValues={selectedReservation} menu={menu}/>
         </Popup>
-        {error != "" ? <FieldError alignCenter>{error}</FieldError> : null}
     </PageWrapper> : <LoaderComponent/>
 }
 

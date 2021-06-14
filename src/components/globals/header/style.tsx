@@ -45,7 +45,7 @@ export const HeaderWrapper = styled.div<any>`
   `}
 `;
 
-export const LogoWrapper = styled.div`
+export const LogoWrapper = styled.div<any>`
   width: fit-content;
   cursor: pointer;
   height: fit-content;
@@ -67,6 +67,15 @@ export const LogoWrapper = styled.div`
       left: 0;
     }
   }
+  ${({noAbsolute}) => noAbsolute && `
+    position: relative;
+     width: fit-content;
+    height: auto!important;
+    & img {
+      position: sticky;
+    }
+  `}
+
 `;
 
 export const HeaderLinks = styled.div`
