@@ -1,23 +1,28 @@
 import React, {useEffect, useState} from "react";
-import {RouteComponentProps, withRouter} from "react-router-dom";
+import {RouteComponentProps, useHistory, withRouter} from "react-router-dom";
 import {setupWebSocket, useReservationDispatch, useReservationState} from "../ReservationContext";
 import {LoaderComponent} from "../../globals/Loader/Loader";
-import {FieldError} from "../../globals/formComponents/style";
 import {getReservation, updateAssistanceReservation, updateProductsReservation} from "../ReservationActions";
 import BreadCrumbs from "../../globals/breadCrumbs/BreadCrumbs";
-import {useRestaurantsDispatch, useRestaurantsState} from "../../restaurants/RestaurantsContext";
+import {
+    ProductFormValuesTypes,
+    useRestaurantsDispatch,
+    useRestaurantsState
+} from "../../restaurants/RestaurantsContext";
 import {getMenuByRestaurantId, getRestaurantById} from "../../restaurants/RestaurantsActions";
 import _ from "lodash";
-import {Button, PageWrapper} from "../../globals/GlobalStyles";
+import {HorizontalDelimiter, PageWrapper} from "../../globals/GlobalStyles";
 import {ContainerFields} from "../form/style";
 import "./style";
-import {AbsoluteContainer, DetailContainer, TextDetail} from "./style";
+import {AbsoluteContainer, DetailContainer, LastElement, SpaceAroundContainer, TextDetail} from "./style";
 import MaterialIcon from "../../globals/MaterialIcons";
 import moment from "moment/moment";
 import ManageReservation from "../form/ManageReservation";
 import Popup from "../../globals/popup/Popup";
 import Logo from "../../../assets/Asset 5 (1).svg";
 import {NoFoundPage} from "../../404/NoFound";
+import {DropdownElement} from "../../globals/dropdown/Dropdown";
+import ContextualMenu from "../../globals/dropdown/ContextualMenu";
 
 export type MatchParams = {
     restaurantId: string;
@@ -35,7 +40,7 @@ const ViewReservation = ({match}: ViewRestaurantParams) => {
     const {selectedRestaurant, menu} = useRestaurantsState();
     const {loading, selectedReservation, error, recreateConnection} = useReservationState();
     let [manageReservation, setManageReservationPopup] = useState(false)
-
+    let history = useHistory();
     const autoReconnectDelay = 8000
 
     useEffect(() => {
@@ -81,6 +86,26 @@ const ViewReservation = ({match}: ViewRestaurantParams) => {
 
     let startDate = moment(selectedReservation.startReservationDate).utc().format("YYYY-MM-DD HH:mm")
     let endDate = moment(selectedReservation.endReservationDate).utc().format("HH:mm")
+    const lastElementId = `reservationListing-elem`;
+    const dropDownElements: DropdownElement[] = [{
+        text: "Edit order", icon: "edit", onClick: () => {
+            setManageReservationPopup(true)
+        }
+    }];
+    if (!selectedReservation.needAssistance && selectedReservation.status == "Active") {
+        dropDownElements.push({
+            text: "Need assistance", icon: "help_center", onClick: () => updateAssistanceReservation({
+                reservationId: selectedReservation.id,
+                dispatch: dispatch,
+                values: {
+                    ...selectedReservation,
+                    needAssistance: true
+                },
+                callBack: () => {
+                }
+            })
+        })
+    }
     console.log(error)
     return !loading ? <PageWrapper centerPage customWidth={"75%"} fullHeight>
         <BreadCrumbs/>
@@ -121,36 +146,27 @@ const ViewReservation = ({match}: ViewRestaurantParams) => {
                     <MaterialIcon iconName={"monetization_on"}/>
                     <TextDetail>Total {selectedReservation.totalToPay}$</TextDetail>
                 </DetailContainer>
+                <HorizontalDelimiter/>
+                <LastElement>
+                    <ContextualMenu
+                        icon={"more_vert"}
+                        id={lastElementId}
+                        dropdownElements={dropDownElements}
+                        history={history}
+                    />
+                </LastElement>
+                {selectedReservation.products.map((product:ProductFormValuesTypes)=>{
+                    return  <DetailContainer>
 
+                        <MaterialIcon iconName={"local_dining"}/>
+                        <SpaceAroundContainer>
+                        <TextDetail>{product.name} - {product.price}$</TextDetail>
+                            <TextDetail>{product.status =="New"?"Unread":product.status}</TextDetail>
+
+                        </SpaceAroundContainer>
+                    </DetailContainer>
+                })}
             </ContainerFields>
-            <Button redButton
-                    customWidth={"95%"}
-                    customMarginRight={"0"}
-                    centerText
-                    onClick={() => setManageReservationPopup(true)}>Edit order</Button>
-
-            {selectedReservation.status == "Pending" || selectedReservation.status == "Wait Client" &&
-            <Button redButton
-                    customWidth={"95%"}
-                    customMarginRight={"0"}
-                    centerText
-                    onClick={() => alert("To do")}>Cancel Reservation</Button>
-            }
-            {!selectedReservation.needAssistance && selectedReservation.status == "Active" && <Button redButton
-                                                                                                      customWidth={"95%"}
-                                                                                                      customMarginRight={"0"}
-                                                                                                      centerText
-                                                                                                      onClick={() => updateAssistanceReservation({
-                                                                                                          reservationId: selectedReservation.id,
-                                                                                                          dispatch: dispatch,
-                                                                                                          values: {
-                                                                                                              ...selectedReservation,
-                                                                                                              needAssistance: true
-                                                                                                          },
-                                                                                                          callBack: () => {
-                                                                                                          }
-                                                                                                      })}>Need
-                assistance</Button>}
         </>}
 
 

@@ -71,6 +71,8 @@ export const LogoWrapper = styled.div<any>`
     position: relative;
      width: fit-content;
     height: auto!important;
+    display:flex;
+    justify-content:center;
     & img {
       position: sticky;
     }

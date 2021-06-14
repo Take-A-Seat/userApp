@@ -51,6 +51,7 @@ export type ProductFormValuesTypes = {
     name: string;
     ingredients: string;
     price: number;
+    status:string;
 }
 export type MenuFieldsValues = {
     id: string;

@@ -6,7 +6,7 @@ export const DetailContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  
+
   & i {
     padding-right: 5px;
   }
@@ -41,4 +41,20 @@ export const AbsoluteContainer = styled.div`
   //    right: 0;
   //  }
   //}
+`
+
+export const LastElement = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 5px;
+`
+
+export const SpaceAroundContainer = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding-right: 15%;
+  justify-content: space-between;
 `
