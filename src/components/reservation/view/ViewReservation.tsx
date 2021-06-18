@@ -155,7 +155,7 @@ const ViewReservation = ({match}: ViewRestaurantParams) => {
                         history={history}
                     />
                 </LastElement>
-                {selectedReservation.products.map((product:ProductFormValuesTypes)=>{
+                {!_.isEmpty(selectedReservation.products)&&selectedReservation&& selectedReservation.products.map((product:ProductFormValuesTypes)=>{
                     return  <DetailContainer>
 
                         <MaterialIcon iconName={"local_dining"}/>
